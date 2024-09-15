@@ -9,5 +9,4 @@ public class SpeedFrotaApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SpeedFrotaApplication.class, args);
 	}
-
 }

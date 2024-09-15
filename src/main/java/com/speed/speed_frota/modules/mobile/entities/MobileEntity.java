@@ -1,4 +1,4 @@
-package com.speed.speed_frota.modules.mobile;
+package com.speed.speed_frota.modules.mobile.entities;
 
 import java.time.LocalDateTime;
 
@@ -7,22 +7,25 @@ import org.hibernate.annotations.CreationTimestamp;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
+import jakarta.persistence.SequenceGenerator;
 import lombok.Data;
 
 @Data
 @Entity(name = "recebe")
+@SequenceGenerator(name="recebe_seq", allocationSize = 1)
 public class MobileEntity {
     
     @Id
-    @GeneratedValue()
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "recebe_seq")
     private Integer iten;
 
     @Column(name = "cnpj" ,columnDefinition = "VARCHAR(15)")
     private String cnpj;
 
-    @Column(name = "md5" ,columnDefinition = "VARCHAR(25)")
+    @Column(name = "md5" ,columnDefinition = "VARCHAR(50)")
     private String md5;
 
     @Lob
