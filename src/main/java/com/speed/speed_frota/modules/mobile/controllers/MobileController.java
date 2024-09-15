@@ -62,7 +62,7 @@ public class MobileController {
         }
     }
 
-    @GetMapping("/users/{deviceId}")
+    @GetMapping("/fetch/{deviceId}")
     public ResponseEntity<Object> findUsersByMd5(@PathVariable("deviceId") String md5) {
         try {
             String fileReaded = FileUtils.readArchive(md5);

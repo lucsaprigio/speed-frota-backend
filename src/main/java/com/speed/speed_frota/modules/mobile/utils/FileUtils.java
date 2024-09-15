@@ -10,7 +10,6 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-
 public class FileUtils {
 
     public static String readArchive(String md5) throws IOException {
@@ -24,32 +23,46 @@ public class FileUtils {
 
         List<String> lines = Files.readAllLines(file.toPath());
 
-        if(lines.isEmpty()) {
+        if (lines.isEmpty()) {
             return "[]";
         }
 
-        JSONArray jsonArray = new JSONArray();
+        JSONArray usersArray = new JSONArray();
+        JSONArray vehiclesArray = new JSONArray();
 
-        for  (String line : lines) {
-            String[] data= line.split("\\|");
+        for (String line : lines) {
+            String[] data = line.split("\\|");
+            System.out.println(data[1]);
 
-            if(data.length == 4) {
+            if (data[1].equals("1")) {
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.put("id", data[1]);
-                jsonObject.put("username", data[2]);
-                jsonObject.put("password", data[3]);
+                jsonObject.put("id", data[2]);
+                jsonObject.put("username", data[3]);
+                jsonObject.put("password", data[4]);
 
-                jsonArray.put(jsonObject);
+                usersArray.put(jsonObject);
+            } else if (data[1].equals("2")) {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("id", data[2]);
+                jsonObject.put("model", data[3]);
+                jsonObject.put("license_plate", data[4]);
+
+                vehiclesArray.put(jsonObject);
             } else {
                 throw new IOException("Formato de arquivo inválido na linha: " + line);
             }
 
         }
-        return jsonArray.toString(4);
+
+        JSONObject result = new JSONObject();
+        result.put("users", usersArray);
+        result.put("vehicles", vehiclesArray);
+
+        return result.toString(4); // 4 é a indentaão de JSON
     }
 
     public static byte[] generateArchive(String name, String content) throws IOException {
-        
+
         Files.createDirectories(Paths.get("C:\\recebe\\"));
 
         String fileName = "C:\\recebe\\" + name + ".txt";
