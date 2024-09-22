@@ -13,6 +13,7 @@ public class RegisterUserUseCase {
     private MobileRepository mobileRepository;
 
     public MobileEntity execute(MobileEntity mobileEntity ) {
+        System.out.println(mobileEntity);
         return this.mobileRepository.save(mobileEntity);
     }
 }

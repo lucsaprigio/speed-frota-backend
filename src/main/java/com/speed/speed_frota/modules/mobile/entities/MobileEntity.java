@@ -25,7 +25,7 @@ public class MobileEntity {
     @Column(name = "cnpj" ,columnDefinition = "VARCHAR(15)")
     private String cnpj;
 
-    @Column(name = "md5" ,columnDefinition = "VARCHAR(50)")
+    @Column(name = "md5" ,columnDefinition = "VARCHAR(55)")
     private String md5;
 
     @Lob
