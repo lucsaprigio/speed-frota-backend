@@ -14,7 +14,7 @@ import jakarta.persistence.SequenceGenerator;
 import lombok.Data;
 
 @Data
-@Entity(name = "recebe")
+@Entity(name = "db_recebe")
 @SequenceGenerator(name="recebe_seq", allocationSize = 1)
 public class MobileEntity {
     

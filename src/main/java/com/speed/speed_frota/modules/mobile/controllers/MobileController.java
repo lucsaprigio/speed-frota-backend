@@ -48,7 +48,7 @@ public class MobileController {
         try {
             MobileEntity mobileInfo = new MobileEntity();
 
-            String md5String = mobileDTO.getMd5().substring(0, Math.min(mobileDTO.getMd5().length(), 25));
+            String md5String = mobileDTO.getMd5().substring(0, Math.min(mobileDTO.getMd5().length(), 40));
 
             mobileInfo.setCnpj(mobileDTO.getCnpj());
             mobileInfo.setMd5(md5String);

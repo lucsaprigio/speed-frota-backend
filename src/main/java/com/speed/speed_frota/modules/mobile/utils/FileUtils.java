@@ -18,7 +18,7 @@ public class FileUtils {
         File file = new File(filename);
 
         if (!file.exists()) {
-            throw new IOException("Arquivo não encontrado: " + filename);
+            throw new IOException("Arquivo não encontrado.");
         }
 
         List<String> lines = Files.readAllLines(file.toPath());
@@ -29,13 +29,14 @@ public class FileUtils {
 
         JSONArray usersArray = new JSONArray();
         JSONArray vehiclesArray = new JSONArray();
+        JSONArray providersArray = new JSONArray();
 
         for (String line : lines) {
             String[] data = line.split("\\|");
-            System.out.println(data[1]);
 
             if (data[1].equals("1")) {
                 JSONObject jsonObject = new JSONObject();
+
                 jsonObject.put("id", data[2]);
                 jsonObject.put("username", data[3]);
                 jsonObject.put("password", data[4]);
@@ -43,12 +44,21 @@ public class FileUtils {
                 usersArray.put(jsonObject);
             } else if (data[1].equals("2")) {
                 JSONObject jsonObject = new JSONObject();
+
                 jsonObject.put("id", data[2]);
                 jsonObject.put("model", data[3]);
                 jsonObject.put("license_plate", data[4]);
 
                 vehiclesArray.put(jsonObject);
-            } else {
+            } else if (data[1].equals("3")) {
+                JSONObject jsonObject = new JSONObject();
+
+                jsonObject.put("id", data[2]);
+                jsonObject.put("providerName", data[3]);
+
+                providersArray.put(jsonObject);
+            } 
+            else {
                 throw new IOException("Formato de arquivo inválido na linha: " + line);
             }
 
@@ -57,6 +67,7 @@ public class FileUtils {
         JSONObject result = new JSONObject();
         result.put("users", usersArray);
         result.put("vehicles", vehiclesArray);
+        result.put("providers", providersArray);
 
         return result.toString(4); // 4 é a indentaão de JSON
     }
