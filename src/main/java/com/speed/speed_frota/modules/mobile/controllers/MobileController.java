@@ -1,7 +1,11 @@
 package com.speed.speed_frota.modules.mobile.controllers;
 
 import java.util.List;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import com.speed.speed_frota.modules.mobile.utils.FileUtils;
+import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.speed.speed_frota.modules.mobile.dto.FleetDTO;
 import com.speed.speed_frota.modules.mobile.dto.MobileDTO;
 import com.speed.speed_frota.modules.mobile.dto.UserDTO;
 import com.speed.speed_frota.modules.mobile.entities.MobileEntity;
@@ -70,6 +75,42 @@ public class MobileController {
         }
     }
 
+    @PostMapping("/send-fleets/{md5}")
+    public ResponseEntity<Object> sendFleet(@RequestBody List<FleetDTO> fleetDTOList, @PathVariable("md5") String md5) {
+        try {
+
+            LocalDateTime date = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmm");
+            String formatedDate = date.format(formatter);
+
+            String fileName = md5 + "_" + formatedDate + ".txt";
+
+            StringBuilder content = new StringBuilder();
+
+            List<Integer> ids = new ArrayList<>();
+
+            for (FleetDTO fleetDTO : fleetDTOList) {
+                content.append("|2|")
+                        .append(fleetDTO.getId()).append("|")
+                        .append(md5).append("|")
+                        .append(fleetDTO.getDescription()).append("|")
+                        .append(fleetDTO.getPrice()).append("|")
+                        .append(fleetDTO.getProvider()).append("|")
+                        .append(fleetDTO.getVehicle_id()).append("|")
+                        .append(fleetDTO.getObs()).append("|")
+                        .append("\n");
+
+                ids.add(fleetDTO.getId());
+            }
+
+            FileUtils.generateArchive(fileName, content.toString());
+
+            return ResponseEntity.ok().body(ids);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
     @PostMapping("/user")
     public ResponseEntity<Object> findUser(@RequestBody MobileDTO mobileDTO) {
         try {
@@ -87,7 +128,7 @@ public class MobileController {
             String fileReaded = FileUtils.readArchive(md5);
 
             return ResponseEntity.ok().body(fileReaded);
-        } catch(Exception e) {
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
@@ -106,7 +147,7 @@ public class MobileController {
     @PutMapping("/active-user")
     public ResponseEntity<Object> activateUser(@RequestBody UserDTO userDTO) {
         try {
-            MobileEntity updatedUser =activeUserUseCase.execute(userDTO);
+            MobileEntity updatedUser = activeUserUseCase.execute(userDTO);
 
             return ResponseEntity.ok(updatedUser);
         } catch (Exception e) {
@@ -125,5 +166,4 @@ public class MobileController {
         }
     }
 
-    
 }
